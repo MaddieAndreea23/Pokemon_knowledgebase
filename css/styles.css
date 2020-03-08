@@ -9,9 +9,9 @@ html {
   overflow: hidden;
 }
 
-body{
+body {
   background-color: black;
-  font-family: 'Lacquer', sans-serif;
+  font-family: "Lacquer", sans-serif;
   position: relative;
   height: 100%;
   width: 100%;
@@ -37,68 +37,29 @@ h1 {
   padding: 1rem;
 }
 
-button {
-  min-width: 5rem;
-  border: none;
-  display: inline-block;
-  background-color: #99ffff;
-  color: #007267;
-  text-decoration: none;
-  padding: 10px;
-  border-radius: 3px;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.3);
-  transition: 0.2s opacity;
-  margin: 10px 5px;
+.list-group {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 1rem;
+  .list-group-item {
+    width: 8rem;
+    border: none;
+    display: inline-block;
+    background-color: #99ffff;
+    color: #007267;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 3px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+    transition: 0.2s opacity;
+    margin: 10px 5px;
+  }
 }
 
 button:hover,
 button:focus {
   cursor: pointer;
-}
-
-#modal-container {
-  display: none;
-}
-
-#modal-container.is-visible {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  min-width: 40rem;
-  padding: 20px;
-  box-sizing: border-box;
-  background: rgba(0, 0, 0, 0.5);
-
-  /* To allow scrolling if the screen is not high enough */
-  overflow: auto;
-
-  /* To centre the modal */
-  display: grid;
-  text-align: center;
-}
-
-.modal {
-  margin: auto;
-  display: inline-block;
-  box-sizing: border-box;
-  padding: 15px;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-  border-radius: 15px;
-  border-style: solid;
-  background-color: coral;
-}
-
-.modal-close {
-  margin-bottom: 0px;
-  width: 100px;
-  float: right;
-  border: 0;
-  background: none;
-  color: darkblue;
 }
 
 .modal h1 {
@@ -109,15 +70,4 @@ button:focus {
 
 .modal p {
   margin-bottom: 0;
-}
-
-
-@media all and (min-width: 600px) and (max-width: 900px) {
-  .pokemonList__item {
-    align-items: flex-start;
-    justify-content: flex-start;
-  }
-  .modal {
-    max-width: 700px;
-  }
 }

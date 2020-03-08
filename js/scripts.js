@@ -1,6 +1,9 @@
 const pokemonRepository = (function() {
   const repository = [];
-  const $modalContainer = $('#modal-container');
+
+  // hide initially. bootstrap only sets the opacity to 0 and then
+  // still blocks the clicks on buttons behind it
+  const $bsModal = $("#pokemon-modal").hide();
   const $pokemonList = $("ul");
   const apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=150";
 
@@ -10,7 +13,7 @@ const pokemonRepository = (function() {
         if (response.ok) {
           return response.json();
         } else {
-          throw 'Something went wrong when loading the list.';
+          throw "Something went wrong when loading the list.";
         }
       })
       .then(function(json) {
@@ -24,22 +27,22 @@ const pokemonRepository = (function() {
   }
 
   function addListItem(pokemon) {
-    var $listItem = $("<li>");
-    var $button = $("<button>");
-    $button.text(pokemon.name);
-    $button.addClass("pokemon-name");
-    $listItem.append($button);
-    $pokemonList.append($listItem);
-    $button.on('click', function() {
+    var $button = $(
+      '<button type="button" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#pokemon-modal">'
+    )
+      .text(pokemon.name)
+      .appendTo("#pokemonList");
+
+    $button.on("click", function() {
       showDetails(pokemon);
     });
   }
 
   function showDetails(pokemon) {
-    pokemonRepository.loadDetails(pokemon).then(function () {
+    pokemonRepository.loadDetails(pokemon).then(function() {
       showModal(pokemon);
     });
-  };
+  }
 
   function add(item) {
     repository.push(item);
@@ -56,12 +59,13 @@ const pokemonRepository = (function() {
         if (response.ok) {
           return response.json();
         } else {
-          throw 'Something went wrong when loading details.';
+          throw "Something went wrong when loading details.";
         }
       })
       .then(function(details) {
         item.imageUrl = details.sprites.front_default;
         item.height = details.height;
+        item.weight = details.weight;
       })
       .catch(function(e) {
         console.error(e);
@@ -70,52 +74,36 @@ const pokemonRepository = (function() {
 
   // handler to close the modal when clicking outside of it
   const clickHandler = e => {
-    if (!$(e.target).closest('#modal').length) hideModal();
-  }
+    if (!$(e.target).closest("#pokemon-modal").length) hideModal();
+  };
 
   // handler to close the modal on escape
   const keydownHandler = e => {
-    if (e.key === 'Escape' && $modalContainer.hasClass('is-visible')) hideModal();
-  }
+    if (e.key === "Escape" && $bsModal.hasClass("in")) hideModal();
+  };
 
   function showModal(item) {
-   $modalContainer.empty();
-   var $modal = $('<div>');
-   $modal.addClass('modal');
-   $modal.attr("id", "modal");
+    var $nameElement = $("#pokemon-name").text(
+      item.name.charAt(0).toUpperCase() + item.name.slice(1)
+    );
 
-   var $closeButtonElement = $('<button>');
-   $closeButtonElement.addClass('modal-close');
-   $closeButtonElement.text('Close');
-   $closeButtonElement.on('click', hideModal);
-
-   var $nameElement = $('<h1>').text(item.name.charAt(0).toUpperCase() + item.name.slice(1));
-
-   var $imageElement = $('<img class="modal-img" src="'+item.imageUrl+'">');
-
-   var $heightElement = $('<p>').text('Height: ' + item.height + 'm');
-
-   $modal.append($closeButtonElement);
-   $modal.append($nameElement);
-   $modal.append($imageElement);
-   $modal.append($heightElement);
-   $modalContainer.append($modal);
-
-    $modalContainer.addClass('is-visible');
+    var $imageElement = $("#pokemon-image").attr("src", item.imageUrl);
+    var $heightElement = $("#pokemon-height").text(
+      "Height: " + item.height + "m"
+    );
+    var $weightElement = $("#pokemon-weight").text(
+      "Weight: " + item.weight + "kg"
+    );
 
     // Click outside of the modal to close it
-    $(window).on('click', clickHandler)
-    $(window).on('keydown', keydownHandler)
-  };
+    $(window).on("click", clickHandler);
+    $(window).on("keydown", keydownHandler);
+  }
 
   //close the modal
   function hideModal() {
-    $modalContainer.removeClass('is-visible');
-    $modalContainer.empty();
-    $(window).off('click', clickHandler);
-    $(window).off('keydown', keydownHandler)
-  };
-
+    $bsModal.modal("hide");
+  }
 
   return {
     add: add,
